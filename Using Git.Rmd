@@ -1,7 +1,9 @@
 ---
 title: "Using Git"
-output:
-  bookdown::tufte_html2
+output: 
+ github_document
+  # bookdown::tufte_html2:
+  #   keep_md: True
 ---
 
 ## How does Git store information?
