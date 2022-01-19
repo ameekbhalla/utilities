@@ -1,0 +1,32 @@
+---
+title: "File Management"
+author: "Ameek Bhalla"
+date: "1/18/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+yesy\#\# Windows commands
+
+| dir /b/s/o              | list all files in a directory                     |
+|-------------------------|---------------------------------------------------|
+| dir /b/s/o \> list1.txt | list all files in a directory into a new txt file |
+| cd /d                   | change to a different drive                       |
+
+```{r}
+test1 <- read_lines("list1.txt") %>% 
+  str_subset("(\\\\(?!.*\\\\))(.*JPG)") %>% #removes lines without a match
+  str_extract("(\\\\(?!.*\\\\))(.*JPG)") %>% # matches the last "\" and the pattern "JPG"
+  as.data.frame()
+
+test2 <- read_lines("list2.txt") %>% 
+  str_subset("(\\\\(?!.*\\\\))(.*JPG)") %>% #removes lines without a match
+  str_extract("(\\\\(?!.*\\\\))(.*JPG)") %>% # matches the last "\" and the pattern "JPG"
+  as.data.frame()
+
+test1 %>% anti_join(test2) %>% dim() #are there rows in the first df that are absent in the second df
+
+```
