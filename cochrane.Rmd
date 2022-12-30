@@ -1,0 +1,39 @@
+---
+title: "Find the best available evidence for a question in medicine"
+output: html_document
+---
+
+Say you are interested in finding out the names of the safest NSAID painkillers. The following steps will get you a list of Cochran reviews. (Step 07 only works in Chrome, so start in Chrome.)
+
+1.  Navigate to <https://www.cochranelibrary.com/>
+
+2.  type "painkiller" and "side effects" in the search box
+
+3.  Open the top hit
+
+4.  Navigate to the section titled "Keywords (MeSH, PICOs)" using the scroll bar on the right
+
+5.  Click the item with the desired qualifier: "Anti‐Inflammatory Agents, Non‐Steroidal [\*administration & dosage, adverse effects];"
+
+6.  Click view results
+
+7.  Export selected citations as a CSV file.
+
+Then you can remove irrelevant reviews by data wrangling.
+
+```{r message=FALSE, warning=FALSE}
+library(tidyverse)
+citations <- read_csv("C:/Users/abhalla/Downloads/citation-export.csv")
+
+keep <- citations |> pull(Title) |>  str_which("Single|Topical|Child|child", negate = TRUE)
+```
+
+Generate hyperlinked table as described [here](https://community.rstudio.com/t/create-interactive-links-in-gt-table-in-rmarkdown/70266/2).
+
+```{r}
+citations |> slice(keep) |> select(Title, URL) |> mutate(
+        link = glue::glue("[website]({URL})"),
+        link = map(link, gt::md)) |> 
+  select(-URL) |> rownames_to_column() |> rename("#" = rowname) |> 
+    gt::gt()
+```
